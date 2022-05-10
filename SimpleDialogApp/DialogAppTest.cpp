@@ -87,8 +87,8 @@ int main()
         if (d.decisions.empty() == false) {
             //-1 means they didn't answer which would probably mean something went wrong..
             int decisionMade = -1;
+            //Display the decisions to the user
             for (int j = 0; j < d.decisions.size();j++) {
-                //Write the decisions the user can choose between
                 cout << j << ": " << d.decisions[j].decision << "\n";
             }
             //Tell the user to type a decision

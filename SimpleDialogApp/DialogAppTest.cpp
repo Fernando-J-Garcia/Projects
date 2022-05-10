@@ -51,7 +51,7 @@ int main()
     //otherwise this SHOULD be empty! Empty is what tells the program to not run any of
     //the logic assosiated with decision dialogs.
     decisions = vector<Dialogue::Decision>{
-        //A decisions contains two parts; the actual decision, and the response that will be given if that
+        //A decision contains two parts; the actual decision, and the response that will be given if that
         //decision is made.
         Dialogue::Decision("decision here","response if i made that decision"),
         Dialogue::Decision("decision here","response if i made that decision"),

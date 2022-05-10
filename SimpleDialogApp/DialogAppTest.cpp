@@ -92,7 +92,7 @@ int main()
                 cout << j << ": " << d.decisions[j].decision << "\n";
             }
             //Tell the user to type a decision
-            cout << "Type in the a number to respond ";
+            cout << "Type in a number to respond ";
             cin >> decisionMade;
             //Check for invalid inputs
             while (cin.fail() || decisionMade > d.decisions.size()-1 || decisionMade < 0)

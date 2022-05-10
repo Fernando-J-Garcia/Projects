@@ -85,7 +85,7 @@ int main()
         //If we have no decisions to make then skip the
         //decision logic!
         if (d.decisions.empty() == false) {
-            //-1 means they didn't answer which should probably means something went wrong..
+            //-1 means they didn't answer which would probably mean something went wrong..
             int decisionMade = -1;
             for (int j = 0; j < d.decisions.size();j++) {
                 //Write the decisions the user can choose between

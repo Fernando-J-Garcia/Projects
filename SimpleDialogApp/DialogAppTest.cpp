@@ -72,7 +72,7 @@ int main()
         Dialogue::Decision("Not good.","I feel that man, but, hey, I hope it gets better."),
         Dialogue::Decision("Its going great!","That's Awesome to hear."),
         Dialogue::Decision("I'm doing alright.","Hey can't always have a good day."),
-        Dialogue::Decision("Sorry, but you kinda smell.","ughhh.. We good man? I was just trying to talk."),
+        Dialogue::Decision("Sorry, but you kinda smell...","ughhh.. We good man? I was just trying to talk."),
     };
     dialog = Dialogue(speaker, text, decisions);
     dialogueData.push_back(dialog);
@@ -106,7 +106,7 @@ int main()
             }
 
             //If get here that means we have put in a valid input
-            coutColor(d.speaker + ": " + d.decisions.at(decisionMade).response,10);
+            coutColor(d.speaker + ": " + d.decisions.at(decisionMade).response + "\n", 10);
         }
     }
 #pragma region Forloop version if thats better for you

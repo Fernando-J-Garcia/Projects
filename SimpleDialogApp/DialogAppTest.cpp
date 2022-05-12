@@ -1,4 +1,3 @@
-
 // DialogAppTest.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
@@ -8,9 +7,11 @@
 #define NOMINMAX
 #include <Windows.h>
 #include <limits>
+#include <thread>
 using namespace std;
 
 void coutColor(string inputString, WORD colorCode);
+void AnimateMessage(string message, WORD colorCode, int milliseconds);
 class Dialogue {
 public:
     class Decision {
@@ -19,7 +20,7 @@ public:
         Decision(string decision, string response);
         ~Decision();
         string decision;
-        string response;        
+        string response;
     };
 
     Dialogue();
@@ -40,31 +41,33 @@ int main()
     string text = "";
     vector<Dialogue::Decision> decisions;
 
-    //Person that is going to be speaking... the name is used for display purposes only
-    //EX:(Bob: dialog here...)
-    speaker = "bob"; 
-    //This is the dialog the speaker is going to say.
-    text = "Hi my name is bob!";
-    //Clear the decision array from the previous dialog.
-    decisions.clear();
-    //If there are any decisions that need to be made with this dialog then put them here
-    //otherwise this SHOULD be empty! Empty is what tells the program to not run any of
-    //the logic assosiated with decision dialogs.
-    decisions = vector<Dialogue::Decision>{
-        //A decision contains two parts; the actual decision, and the response that will be given if that
-        //decision is made.
-        Dialogue::Decision("decision here","response if i made that decision"),
-        Dialogue::Decision("decision here","response if i made that decision"),
-        Dialogue::Decision("decision here","response if i made that decision"),
-        Dialogue::Decision("decision here","response if i made that decision"),
-    };
-    //Make a new dialog with the properties we declared above...
-    dialog = Dialogue(speaker, text, decisions);
-    //Finally we store the dialog...
-    dialogueData.push_back(dialog);
+    /// How to use the dialog system
+    ////Person that is going to be speaking... the name is used for display purposes only
+    ////EX:(Bob: dialog here...)
+    //speaker = "bob";
+    ////This is the dialog the speaker is going to say.
+    //text = "Hi my name is bob!";
+    ////Clear the decision array from the previous dialog.
+    //decisions.clear();
+    ////If there are any decisions that need to be made with this dialog then put them here
+    ////otherwise this SHOULD be empty! Empty is what tells the program to not run any of
+    ////the logic assosiated with decision dialogs.
+    //decisions = vector<Dialogue::Decision>{
+    //    //A decision contains two parts; the actual decision, and the response that will be given if that
+    //    //decision is made.
+    //    Dialogue::Decision("decision here","response if i made that decision"),
+    //    Dialogue::Decision("decision here","response if i made that decision"),
+    //    Dialogue::Decision("decision here","response if i made that decision"),
+    //    Dialogue::Decision("decision here","response if i made that decision"),
+    //};
+    ////Make a new dialog with the properties we declared above...
+    //dialog = Dialogue(speaker, text, decisions);
+    ////Finally we store the dialog...
+    //dialogueData.push_back(dialog);
 
     //This is how it will look without comments MUCH SIMPLER
     //Just Copy and paste from here------
+    //==========================================================================================
     speaker = "bob";
     text = "How are you doing today!";
     decisions.clear();
@@ -76,39 +79,62 @@ int main()
     };
     dialog = Dialogue(speaker, text, decisions);
     dialogueData.push_back(dialog);
-    //To here------------------------------ ...and change it to your liking.
+    //===============================================================================================
+    //To here...and change it to your liking.
+    speaker = "bob";
+    text = "I wonder what jeffrey is doing?";
+    decisions.clear();
+    dialog = Dialogue(speaker, text, decisions);
+    dialogueData.push_back(dialog);
 
+
+    const WORD DEFAULT_COLOR = 7;
+    const WORD P1COLOR = 10;
+    const WORD P2COLOR = 14;
+    const WORD ERRORCOLOR = 12;
+    const int MAIN_DIALOG_SPEED = 30;
+    const int SECONDARY_DIALOG_SPEED = 10;
     //Go through each piece of dialog and display it. 
-    for (Dialogue d: dialogueData) {
+    for (Dialogue d : dialogueData) {
         //Display dialog
-        coutColor(d.speaker + ": " + d.text + "\n",10);
+        AnimateMessage(d.speaker + ": " + d.text, P1COLOR, MAIN_DIALOG_SPEED);
         //If we have no decisions to make then skip the
         //decision logic!
         if (d.decisions.empty() == false) {
             //-1 means they didn't answer which would probably mean something went wrong..
             int decisionMade = -1;
             //Display the decisions to the user
-            for (int j = 0; j < d.decisions.size();j++) {
-                cout << j << ": " << d.decisions[j].decision << "\n";
+            cout << '\n';//skip line...
+            for (int j = 0; j < d.decisions.size(); j++) {
+                string decision = std::to_string(j) + ": " + d.decisions[j].decision + "\n";
+                AnimateMessage(decision, DEFAULT_COLOR, 0);
             }
             //Tell the user to type a decision
             cout << "Type in a number to respond ";
             cin >> decisionMade;
             //Check for invalid inputs
-            while (cin.fail() || decisionMade > d.decisions.size()-1 || decisionMade < 0)
+            while (cin.fail() || decisionMade > d.decisions.size() - 1 || decisionMade < 0)
             {
-                //Clear the input
+                //get rid of error flag
                 cin.clear();
-                //Tells cin to ignore all the input on this line
+                //ignore everthing on this line and go to a new one
                 cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                coutColor("Invalid Entry Type in a number! ",12);
+                AnimateMessage("Invalid Entry Type in a number! ", ERRORCOLOR, SECONDARY_DIALOG_SPEED);
                 cin >> decisionMade;
             }
-
+            cout << '\n';
             //If get here that means we have put in a valid input
-            coutColor(d.speaker + ": " + d.decisions.at(decisionMade).response + "\n", 10);
+
+            //Display the response to the decision we made
+            AnimateMessage(d.speaker + ": " + d.decisions.at(decisionMade).response, P1COLOR, MAIN_DIALOG_SPEED);
+
+            //Clear the decision input from the cin...
+            cin.ignore();
         }
-    }
+        //Wait for user to press enter...
+        cin.get();
+        cout << "\n";
+    }    
 #pragma region Forloop version if thats better for you
     /*for (int i = 0; i < dialogData.size(); i++) {
         cout << dialogData[i].speaker << ": " << dialogData[i].text << "\n";
@@ -121,7 +147,7 @@ int main()
 #pragma endregion
 
     cout << "\n============================================\n";
-    coutColor("End of our program no more dialog!\n",12);
+    coutColor("End of our program no more dialog!\n", 12);
 }
 
 Dialogue::Dialogue()
@@ -171,7 +197,7 @@ void coutColor(string inputString, WORD colorCode)
 
     //If we couldn't get screen buffer info the BAIL!
     if (!GetConsoleScreenBufferInfo(hConsole, &info))return;
-    
+
     //Store the previous color in a variable 
     short prevColor = info.wAttributes;
 
@@ -180,4 +206,26 @@ void coutColor(string inputString, WORD colorCode)
     cout << inputString;
     //Reset the color...
     SetConsoleTextAttribute(hConsole, prevColor);
+}
+void AnimateMessage(string message, WORD colorCode,int milliseconds)
+{
+    bool skipMessage = false;
+    for (int i = 0; i < message.size(); i++)
+    {
+        if (GetKeyState(VK_SPACE)) skipMessage = true;//If the user presses enter stop animating the message
+        string letter = "";
+        if (letter == "\\")
+            if (message[i + 1] == 'n')
+            {
+                cout << "\n";
+                i + 2;
+                continue;
+            }
+        letter.push_back(message[i]);
+        coutColor(letter, colorCode);
+
+        //If we skip the message then just write out the message with no animations.
+        if (skipMessage == true) continue;
+        std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+    }
 }

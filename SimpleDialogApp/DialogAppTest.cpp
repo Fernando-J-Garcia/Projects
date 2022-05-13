@@ -34,7 +34,7 @@ public:
 int main()
 {
     //This is where your dialog data will be stored. It would be best practice to put it in a seperate class and file, but for the sake of
-    //simplicity and jessie's small brain it will go in here.
+    //simplicity it will go in here.
     vector<Dialogue> dialogueData;
     Dialogue dialog;
     string speaker = "";
@@ -81,6 +81,8 @@ int main()
     dialogueData.push_back(dialog);
     //===============================================================================================
     //To here...and change it to your liking.
+
+    //This is an example fo dialog that doesn't have any decisions
     speaker = "bob";
     text = "I wonder what jeffrey is doing?";
     decisions.clear();
